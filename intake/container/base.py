@@ -49,7 +49,7 @@ class RemoteSource(DataSource):
                            parameters=self.parameters)
             req = requests.post(urljoin(self.url, '/v1/source'),
                                 data=msgpack.packb(payload, **pack_kwargs),
-                                **self.headers)
+                                **self.headers, timeout=60)
             req.raise_for_status()
             response = msgpack.unpackb(req.content, **unpack_kwargs)
             self._parse_open_response(response)
@@ -106,7 +106,7 @@ def get_partition(url, headers, source_id, container, partition):
     try:
         resp = requests.post(urljoin(url, '/v1/source'),
                              data=msgpack.packb(payload, **pack_kwargs),
-                             **headers)
+                             **headers, timeout=60)
         if resp.status_code != 200:
             raise Exception('Error reading data')
 
