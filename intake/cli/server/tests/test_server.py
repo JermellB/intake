@@ -5,7 +5,6 @@
 # The full license is in the LICENSE file, distributed with this software.
 #-----------------------------------------------------------------------------
 
-import os
 import os.path
 
 import pytest
@@ -23,6 +22,7 @@ from intake.container.serializer import MsgPackSerializer, GzipCompressor
 from intake.cli.server.server import IntakeServer
 from intake.compat import unpack_kwargs, pack_kwargs
 from intake.utils import make_path_posix
+from security import safe_requests
 
 catalog_file = make_path_posix(
     os.path.join(os.path.dirname(__file__), 'catalog1.yml'))
@@ -284,7 +284,7 @@ def port_server(tmpdir):
     try:
         while True:
             try:
-                requests.get('http://localhost:%s' % port)
+                safe_requests.get('http://localhost:%s' % port)
                 yield 'intake://localhost:%s' % port
                 break
             except:
@@ -311,7 +311,7 @@ def address_server(tmpdir):
     t = time.time()
     while True:
         try:
-            requests.get('http://0.0.0.0:%s' % port)
+            safe_requests.get('http://0.0.0.0:%s' % port)
             yield 'intake://0.0.0.0:%s' % port
             break
         except:

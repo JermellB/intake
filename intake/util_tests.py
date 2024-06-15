@@ -7,8 +7,6 @@
 
 from contextlib import contextmanager
 import os
-import posixpath
-import requests
 import shutil
 import subprocess
 import sys
@@ -17,6 +15,7 @@ import time
 import yaml
 
 from .utils import make_path_posix
+from security import safe_requests
 
 ex = sys.executable
 here = os.path.dirname(__file__)
@@ -54,7 +53,7 @@ def server(args=None, cat=None, env=None, wait=None, timeout=25):
     if wait is not None:
         while True:
             try:
-                requests.get('http://localhost:%i/v1/info' % wait)
+                safe_requests.get('http://localhost:%i/v1/info' % wait)
                 break
             except:
                 time.sleep(0.1)
