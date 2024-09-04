@@ -627,7 +627,7 @@ class RemoteCatalog(Catalog):
         params = {'page_offset': page_offset,
                   'page_size': self._page_size}
         http_args = self._get_http_args(params)
-        response = requests.get(self.info_url, **http_args)
+        response = requests.get(self.info_url, **http_args, timeout=60)
         # Produce a chained exception with both the underlying HTTPError
         # and our own more direct context.
         try:
@@ -657,7 +657,7 @@ class RemoteCatalog(Catalog):
         logger.debug("Requesting info about entry named '%s'", name)
         params = {'name': name}
         http_args = self._get_http_args(params)
-        response = requests.get(self.source_url, **http_args)
+        response = requests.get(self.source_url, **http_args, timeout=60)
         if response.status_code == 404:
             raise KeyError(name)
         try:
@@ -714,7 +714,7 @@ class RemoteCatalog(Catalog):
             # Just fetch the metadata now; fetch source info later in pages.
             params = {'page_offset': 0, 'page_size': 0}
         http_args = self._get_http_args(params)
-        response = requests.get(self.info_url, **http_args)
+        response = requests.get(self.info_url, **http_args, timeout=60)
         try:
             response.raise_for_status()
             error = False
@@ -755,7 +755,7 @@ class RemoteCatalog(Catalog):
                    'source_id': self._source_id}
         response = requests.post(
             url=self.source_url, **self._get_http_args({}),
-            data=msgpack.packb(request, **pack_kwargs))
+            data=msgpack.packb(request, **pack_kwargs), timeout=60)
         try:
             response.raise_for_status()
         except requests.HTTPError as err:
