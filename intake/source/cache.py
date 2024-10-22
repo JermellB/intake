@@ -20,6 +20,7 @@ import warnings
 from fsspec.utils import infer_storage_options
 from intake.config import conf
 from intake.utils import make_path_posix
+from security import safe_command
 
 logger = logging.getLogger('intake')
 
@@ -470,7 +471,7 @@ class DATCache(BaseCache):
         dat, part = os.path.split(urlpath)
         cmd = ['dat', 'clone', dat, path, '--no-watch']
         try:
-            subprocess.call(cmd, stdout=subprocess.PIPE)
+            safe_command.run(subprocess.call, cmd, stdout=subprocess.PIPE)
         except (IOError, OSError):  # pragma: no cover
             logger.info('Calling DAT failed')
             raise
