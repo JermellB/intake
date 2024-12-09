@@ -245,7 +245,7 @@ def multi_server(tmpdir):
     t = time.time()
     while True:
         try:
-            requests.get('http://localhost:5000')
+            requests.get('http://localhost:5000', timeout=60)
             yield 'intake://localhost:5000'
             break
         except:
@@ -284,7 +284,7 @@ def port_server(tmpdir):
     try:
         while True:
             try:
-                requests.get('http://localhost:%s' % port)
+                requests.get('http://localhost:%s' % port, timeout=60)
                 yield 'intake://localhost:%s' % port
                 break
             except:
@@ -311,7 +311,7 @@ def address_server(tmpdir):
     t = time.time()
     while True:
         try:
-            requests.get('http://0.0.0.0:%s' % port)
+            requests.get('http://0.0.0.0:%s' % port, timeout=60)
             yield 'intake://0.0.0.0:%s' % port
             break
         except:
