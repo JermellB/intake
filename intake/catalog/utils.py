@@ -79,7 +79,7 @@ def _expand(p, context, all_vars, client, getenv, getshell):
         return type(p)(_expand(v, context, all_vars, client, getenv, getshell)
                        for v in p)
     elif isinstance(p, str):
-        jinja = Environment()
+        jinja = Environment(autoescape=True)
         if getenv and not client:
             jinja.globals['env'] = _j_getenv
         else:
@@ -306,7 +306,7 @@ class RemoteCatalogError(Exception):
 
 def _has_catalog_dir(args):
     """Check is any value in args dict needs CATALOG_DIR variable"""
-    env = Environment()
+    env = Environment(autoescape=True)
     for k, arg in args.items():
         parsed_content = env.parse(arg)
         vars = meta.find_undeclared_variables(parsed_content)
