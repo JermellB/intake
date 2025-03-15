@@ -39,19 +39,19 @@ def test_basic():
         env = os.environ.copy()
         env['INTAKE_CONF_FILE'] = fn
         with server(env=env, wait=5000):
-            r = requests.get('http://localhost:5000/v1/info')
+            r = requests.get('http://localhost:5000/v1/info', timeout=60)
             assert r.ok
     with temp_conf({}) as fn:
         env = os.environ.copy()
         env['INTAKE_CONF'] = os.path.dirname(fn)
         with server(env=env, wait=5000):
-            r = requests.get('http://localhost:5000/v1/info')
+            r = requests.get('http://localhost:5000/v1/info', timeout=60)
             assert r.ok
     with temp_conf({}) as fn:
         env = os.environ.copy()
         env['INTAKE_CONF'] = os.path.dirname(fn) + ":/nonexistent"
         with server(env=env, wait=5000):
-            r = requests.get('http://localhost:5000/v1/info')
+            r = requests.get('http://localhost:5000/v1/info', timeout=60)
             assert r.ok
 
 
@@ -60,7 +60,7 @@ def test_cli():
         env = os.environ.copy()
         env['INTAKE_CONF_FILE'] = fn
         with server(args=('-p', '5555'), env=env, wait=5555):
-            r = requests.get('http://localhost:5555/v1/info')
+            r = requests.get('http://localhost:5555/v1/info', timeout=60)
             assert r.ok
 
 
@@ -69,7 +69,7 @@ def test_conf():
         env = os.environ.copy()
         env['INTAKE_CONF_FILE'] = fn
         with server(env=env, wait=5555):
-            r = requests.get('http://localhost:5555/v1/info')
+            r = requests.get('http://localhost:5555/v1/info', timeout=60)
             assert r.ok
 
 
@@ -81,10 +81,10 @@ def test_conf_auth():
         env['INTAKE_CONF_FILE'] = fn
         with server(env=env, wait=5556):
             # raw request
-            r = requests.get('http://localhost:5556/v1/info')
+            r = requests.get('http://localhost:5556/v1/info', timeout=60)
             assert r.status_code == 403
             r = requests.get('http://localhost:5556/v1/info',
-                             headers={'intake-secret': 'test'})
+                             headers={'intake-secret': 'test'}, timeout=60)
             assert r.ok
 
             # with cat

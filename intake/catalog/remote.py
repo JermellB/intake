@@ -99,7 +99,7 @@ def open_remote(url, entry, container, user_parameters, description, http_args,
                    available_plugins=list(plugin_registry.keys()))
     req = requests.post(urljoin(url, '/v1/source'),
                         data=msgpack.packb(payload, **pack_kwargs),
-                        **http_args)
+                        **http_args, timeout=60)
     if req.ok:
         response = msgpack.unpackb(req.content, **unpack_kwargs)
 
