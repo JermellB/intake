@@ -10,7 +10,6 @@ import subprocess
 import time
 
 import pytest
-import requests
 
 from intake import config
 from intake.container import persist
@@ -18,6 +17,7 @@ from intake.util_tests import ex, PY2
 from intake.utils import make_path_posix
 from intake.source.base import DataSource, Schema
 from intake import register_driver
+from security import safe_requests
 
 here = os.path.dirname(__file__)
 
@@ -60,7 +60,7 @@ def tmp_config_path(tmp_path):
 
 def ping_server(url, swallow_exception, head=None):
     try:
-        r = requests.get(url)
+        r = safe_requests.get(url)
     except Exception as e:
         if swallow_exception:
             return False
@@ -150,7 +150,7 @@ def http_server():
     timeout = 5
     while True:
         try:
-            requests.get(url)
+            safe_requests.get(url)
             break
         except:
             time.sleep(0.1)
