@@ -6,6 +6,8 @@
 #-----------------------------------------------------------------------------
 
 from distutils.version import LooseVersion
+import secrets
+
 try:
     import dask
     DASK_VERSION = LooseVersion(dask.__version__)
@@ -288,6 +290,5 @@ def path_to_pattern(path, metadata=None):
 
 def unique_string():
     from string import ascii_letters, digits
-    from random import choice
 
-    return ''.join([choice(ascii_letters + digits) for n in range(8)])
+    return ''.join([secrets.choice(ascii_letters + digits) for n in range(8)])
