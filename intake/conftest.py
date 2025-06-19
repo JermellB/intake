@@ -60,7 +60,7 @@ def tmp_config_path(tmp_path):
 
 def ping_server(url, swallow_exception, head=None):
     try:
-        r = requests.get(url)
+        r = requests.get(url, timeout=60)
     except Exception as e:
         if swallow_exception:
             return False
@@ -150,7 +150,7 @@ def http_server():
     timeout = 5
     while True:
         try:
-            requests.get(url)
+            requests.get(url, timeout=60)
             break
         except:
             time.sleep(0.1)
