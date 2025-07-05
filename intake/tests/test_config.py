@@ -12,6 +12,7 @@ import requests
 import intake
 from intake import config
 from intake.util_tests import temp_conf, server
+from security import safe_requests
 
 
 @pytest.mark.parametrize('conf', [
@@ -83,7 +84,7 @@ def test_conf_auth():
             # raw request
             r = requests.get('http://localhost:5556/v1/info')
             assert r.status_code == 403
-            r = requests.get('http://localhost:5556/v1/info',
+            r = safe_requests.get('http://localhost:5556/v1/info',
                              headers={'intake-secret': 'test'})
             assert r.ok
 
