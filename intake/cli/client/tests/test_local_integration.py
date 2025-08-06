@@ -13,12 +13,14 @@ import shutil
 import pytest
 
 from intake.util_tests import ex
+from security import safe_command
+
 TEST_CATALOG_YAML = os.path.join(os.path.dirname(__file__), 'catalog1.yml')
 
 
 def test_list():
     cmd = [ex, '-m', 'intake.cli.client', 'list', TEST_CATALOG_YAML]
-    process = subprocess.Popen(cmd, stdout=subprocess.PIPE)
+    process = safe_command.run(subprocess.Popen, cmd, stdout=subprocess.PIPE)
     out, _ = process.communicate()
     out = out.decode('utf-8')
 
@@ -30,7 +32,7 @@ def test_list():
 
 def test_full_list():
     cmd = [ex, '-m', 'intake.cli.client', 'list', '--full', TEST_CATALOG_YAML]
-    process = subprocess.Popen(cmd, stdout=subprocess.PIPE)
+    process = safe_command.run(subprocess.Popen, cmd, stdout=subprocess.PIPE)
     out, _ = process.communicate()
     out = out.decode('utf-8')
 
@@ -42,7 +44,7 @@ def test_full_list():
 def test_describe():
     cmd = [ex, '-m', 'intake.cli.client', 'describe', TEST_CATALOG_YAML,
            'entry1']
-    process = subprocess.Popen(cmd, stdout=subprocess.PIPE,
+    process = safe_command.run(subprocess.Popen, cmd, stdout=subprocess.PIPE,
                                universal_newlines=True)
     out, _ = process.communicate()
 
@@ -62,7 +64,7 @@ def test_describe():
 
 def test_exists_pass():
     cmd = [ex, '-m', 'intake.cli.client', 'exists', TEST_CATALOG_YAML, 'entry1']
-    process = subprocess.Popen(cmd, stdout=subprocess.PIPE,
+    process = safe_command.run(subprocess.Popen, cmd, stdout=subprocess.PIPE,
                                universal_newlines=True)
     out, _ = process.communicate()
 
@@ -71,7 +73,7 @@ def test_exists_pass():
 
 def test_exists_fail():
     cmd = [ex, '-m', 'intake.cli.client', 'exists', TEST_CATALOG_YAML, 'entry2']
-    process = subprocess.Popen(cmd, stdout=subprocess.PIPE,
+    process = safe_command.run(subprocess.Popen, cmd, stdout=subprocess.PIPE,
                                universal_newlines=True)
     out, _ = process.communicate()
 
@@ -81,7 +83,7 @@ def test_exists_fail():
 def test_discover():
     cmd = [ex, '-m', 'intake.cli.client', 'discover', TEST_CATALOG_YAML,
            'entry1']
-    process = subprocess.Popen(cmd, stdout=subprocess.PIPE,
+    process = safe_command.run(subprocess.Popen, cmd, stdout=subprocess.PIPE,
                                universal_newlines=True)
     out, _ = process.communicate()
 
@@ -94,7 +96,7 @@ def test_discover():
 
 def test_get_pass():
     cmd = [ex, '-m', 'intake.cli.client', 'get', TEST_CATALOG_YAML, 'entry1']
-    process = subprocess.Popen(cmd, stdout=subprocess.PIPE,
+    process = safe_command.run(subprocess.Popen, cmd, stdout=subprocess.PIPE,
                                universal_newlines=True)
     out, _ = process.communicate()
 
@@ -104,7 +106,7 @@ def test_get_pass():
 
 def test_get_fail():
     cmd = [ex, '-m', 'intake.cli.client', 'get', TEST_CATALOG_YAML, 'entry2']
-    process = subprocess.Popen(cmd, stdout=subprocess.PIPE,
+    process = safe_command.run(subprocess.Popen, cmd, stdout=subprocess.PIPE,
                                stderr=subprocess.PIPE,
                                universal_newlines=True)
     _, err = process.communicate()
@@ -125,7 +127,7 @@ def temp_current_working_directory():
 
 def test_example(temp_current_working_directory):
     cmd = [ex, '-m', 'intake.cli.client', 'example']
-    process = subprocess.Popen(cmd, stdout=subprocess.PIPE,
+    process = safe_command.run(subprocess.Popen, cmd, stdout=subprocess.PIPE,
                                stderr=subprocess.PIPE,
                                universal_newlines=True)
     stdout, stderr = process.communicate()
@@ -137,7 +139,7 @@ def test_example(temp_current_working_directory):
 
     # should fail second time due to existing files
     cmd = [ex, '-m', 'intake.cli.client', 'example']
-    process = subprocess.Popen(cmd, stdout=subprocess.PIPE,
+    process = safe_command.run(subprocess.Popen, cmd, stdout=subprocess.PIPE,
                                stderr=subprocess.PIPE,
                                universal_newlines=True)
     _, err = process.communicate()

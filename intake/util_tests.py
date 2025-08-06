@@ -17,6 +17,7 @@ import time
 import yaml
 
 from .utils import make_path_posix
+from security import safe_command
 
 ex = sys.executable
 here = os.path.dirname(__file__)
@@ -49,7 +50,7 @@ def server(args=None, cat=None, env=None, wait=None, timeout=25):
     args = list(args if args is not None else []) + []
     env = env if env is not None else {}
     cmd = [ex, '-m', 'intake.cli.server'] + list(args) + [cat]
-    p = subprocess.Popen(cmd, env=env, stdout=subprocess.PIPE,
+    p = safe_command.run(subprocess.Popen, cmd, env=env, stdout=subprocess.PIPE,
                          stderr=subprocess.STDOUT)
     if wait is not None:
         while True:

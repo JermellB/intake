@@ -13,6 +13,8 @@ from intake.source.cache import FileCache, CacheMetadata
 import intake
 import intake.config
 import logging
+from security import safe_command
+
 here = os.path.dirname(os.path.abspath(__file__))
 logger = logging.getLogger('intake')
 
@@ -198,18 +200,18 @@ def test_compressions(temp_cache, tempdir, comp):
     with open(fn, 'wb') as f:
         f.write(data)
     if comp == 'tgz':
-        subprocess.call(shlex.split('tar -czf {fn}.tgz {fn} -C {d}'.format(
+        safe_command.run(subprocess.call, shlex.split('tar -czf {fn}.tgz {fn} -C {d}'.format(
             fn=fn, d=tempdir)))
     elif comp == 'tbz':
-        subprocess.call(shlex.split('tar -cjf {fn}.tbz {fn} -C {d}'.format(
+        safe_command.run(subprocess.call, shlex.split('tar -cjf {fn}.tbz {fn} -C {d}'.format(
             fn=fn, d=tempdir)))
     elif comp == 'tar':
-        subprocess.call(shlex.split('tar -cf {fn}.tar {fn} -C {d}'.format(
+        safe_command.run(subprocess.call, shlex.split('tar -cf {fn}.tar {fn} -C {d}'.format(
             fn=fn, d=tempdir)))
     elif comp == 'gz':
-        subprocess.call(shlex.split('gzip ' + fn))
+        safe_command.run(subprocess.call, shlex.split('gzip ' + fn))
     elif comp == 'bz':
-        subprocess.call(shlex.split('bzip2 ' + fn))
+        safe_command.run(subprocess.call, shlex.split('bzip2 ' + fn))
     fn = os.path.join(
         tempdir,
         [f for f in os.listdir(tempdir) if f.startswith('data.')][0])
