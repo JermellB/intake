@@ -18,6 +18,7 @@ from intake.util_tests import ex, PY2
 from intake.utils import make_path_posix
 from intake.source.base import DataSource, Schema
 from intake import register_driver
+from security import safe_command
 
 here = os.path.dirname(__file__)
 
@@ -110,7 +111,7 @@ def intake_server(request):
     else:
         cmd.append(catalog_path)
     try:
-        p = subprocess.Popen(cmd, env=env)
+        p = safe_command.run(subprocess.Popen, cmd, env=env)
         url = 'http://localhost:%d/v1/info' % port
 
         # wait for server to finish initalizing, but let the exception through
@@ -145,7 +146,7 @@ def http_server():
         cmd = ['python', '-m', 'SimpleHTTPServer', port_as_str]
     else:
         cmd = ['python', '-m', 'http.server', port_as_str]
-    p = subprocess.Popen(cmd, cwd=os.path.join(here, 'catalog', 'tests'))
+    p = safe_command.run(subprocess.Popen, cmd, cwd=os.path.join(here, 'catalog', 'tests'))
     url = 'http://localhost:{}/'.format(port_as_str)
     timeout = 5
     while True:
